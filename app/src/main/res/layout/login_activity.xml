@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/temp_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <EditText android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:id="@+id/ed_email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="145dp"
+        android:hint="Почта"
+        android:textColorHint="@color/black"
+        android:textSize="20dp" />
+
+    <EditText android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/ed_email"
+        android:hint="Пароль"
+        android:textSize="20dp"
+        android:textColorHint="@color/black"
+        android:id="@+id/ed_password" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ed_password"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        >
+
+        <Button
+            android:layout_height="match_parent"
+            android:text="Авторизация"
+            android:layout_width="256dp"
+            android:id="@+id/b_sign_in"
+            android:backgroundTint="@color/grey"/>
+
+        <Button
+            android:layout_height="match_parent"
+            android:layout_width="256dp"
+            android:text="Регистрация"
+            android:id="@+id/b_registration"
+            android:backgroundTint="@color/grey"/>
+
+    </LinearLayout>
+
+    <!-- <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="150dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/guest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/grey"
+            android:text="Войти, как гость" />
+
+    </LinearLayout>-->
+
+</RelativeLayout>
+    <!-- android:textColorHint="@color/grey_50" -->

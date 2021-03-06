@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".drawing.ActivityTabTwo"
+
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/conductor3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Задача №3"
+            android:layout_gravity="center"
+            android:background="@color/grey"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/conductor4"
+            android:text="Задача №4"
+            android:gravity="center"
+            android:background="@color/grey"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/conductor5"
+            android:text="Задача №5"
+            android:gravity="center"
+            android:background="@color/grey"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

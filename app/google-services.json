@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "106210584708",
+    "firebase_url": "https://abcgeometry-9de60.firebaseio.com",
+    "project_id": "abcgeometry-9de60",
+    "storage_bucket": "abcgeometry-9de60.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106210584708:android:c29eede84e5f6a20a5fad1",
+        "android_client_info": {
+          "package_name": "com.example.abcgeometry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106210584708-8k4hmok1rcu5v8j1tk5rtnp7jvmgc1co.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.abcgeometry",
+            "certificate_hash": "90e527f440a563f8652fc7be992314714dc7dde0"
+          }
+        },
+        {
+          "client_id": "106210584708-ekt07q5cap6pc3o5jqp3uf8gemqr9k60.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIoeuljWeuswbSN0iHrKllaU_l7l4Wtog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106210584708-ekt07q5cap6pc3o5jqp3uf8gemqr9k60.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
