@@ -3,7 +3,6 @@ package com.example.abcgeometry.assigment;
 import android.util.Log;
 
 import com.example.abcgeometry.domain.Intersection;
-import com.example.abcgeometry.domain.Point;
 import com.example.abcgeometry.drawing.TouchEvent;
 
 public class Exercise {

@@ -2,8 +2,6 @@ package com.example.abcgeometry.domain;
 
 import android.util.Pair;
 
-import com.example.abcgeometry.domain.Point;
-
 public class Intersection {
 
     // O(1)

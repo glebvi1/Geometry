@@ -123,7 +123,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        thread = new DrawThread(this.getContext(), surfaceHolder);
+        thread = new DrawThread(surfaceHolder);
         thread.start();
     }
 
@@ -158,7 +158,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
         Paint paintInaccuracyCircle = new Paint();
         private int countSecondsAfterAddFigure = 0;
 
-        public DrawThread(Context context, SurfaceHolder surfaceHolder) {
+        public DrawThread(SurfaceHolder surfaceHolder) {
             this.surfaceHolder = surfaceHolder;
         }
 
