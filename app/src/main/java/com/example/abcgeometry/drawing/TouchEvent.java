@@ -156,6 +156,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
         Paint paintCenterOfCircle = new Paint();
         Paint paintConstantFigure = new Paint();
         Paint paintInaccuracyCircle = new Paint();
+        private int countSecondsAfterAddFigure = 0;
 
         public DrawThread(Context context, SurfaceHolder surfaceHolder) {
             this.surfaceHolder = surfaceHolder;
@@ -163,6 +164,12 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
 
         public void requestStop() {
             running = false;
+        }
+
+        private void drawInaccuracyCircle(Canvas canvas) {
+            if (countSecondsAfterAddFigure < 3) {
+                canvas.drawCircle(touchX1Line, touchY1Line, 30, paintInaccuracyCircle);
+            }
         }
 
         // The set of param such as color, style and width
@@ -226,7 +233,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                     touchX1Line = point.getX();
                     touchY1Line = point.getY();
                     wasInaccuracyLine1 = false;
-                    canvas.drawCircle(touchX1Line, touchY1Line, 30, paintInaccuracyCircle);
+                    drawInaccuracyCircle(canvas);
                 }
             } else {
                 if (point != null && wasInaccuracyLine2
@@ -234,7 +241,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                     touchX2Line = point.getX();
                     touchY2Line = point.getY();
                     wasInaccuracyLine2 = false;
-                    canvas.drawCircle(touchX2Line, touchY2Line, 30, paintInaccuracyCircle);
+                    drawInaccuracyCircle(canvas);
                 }
             }
         }
@@ -283,6 +290,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                 Canvas canvas = surfaceHolder.lockCanvas();
                 if (canvas != null) {
                     setParam(canvas);
+                    points = new ArrayList<Point>();
 
                     // The current points
                     Point currentTouch1 = new Point(touchX1Line, touchY1Line);
@@ -407,13 +415,13 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                             touchX1Line = e[0];
                             touchY1Line = e[1];
                             wasInaccuracyLine1 = false;
-                            canvas.drawCircle(touchX1Line, touchY1Line, 30, paintInaccuracyCircle);
+                            drawInaccuracyCircle(canvas);
                         }
                         if (pointC2 != null && wasInaccuracyLine2) {
                             touchX2Line = e[0];
                             touchY2Line = e[1];
                             wasInaccuracyLine2 = false;
-                            canvas.drawCircle(touchX2Line, touchY2Line, 30, paintInaccuracyCircle);
+                            drawInaccuracyCircle(canvas);
                         }
 
                         // Inaccuracy line with circle
@@ -426,12 +434,12 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                                 Log.d("WasTouchLine", "1был");
                                 touchX1Line = coincidence.first.getX();
                                 touchY1Line = coincidence.first.getY();
-                                canvas.drawCircle(touchX1Line, touchY1Line, 30, paintInaccuracyCircle);
+                                drawInaccuracyCircle(canvas);
                             } else if (coincidence.second == 2 && wasInaccuracyLine2) {
                                 Log.d("WasTouchLine", "2был");
                                 touchX2Line = coincidence.first.getX();
                                 touchY2Line = coincidence.first.getY();
-                                canvas.drawCircle(touchX2Line, touchY2Line, 30, paintInaccuracyCircle);
+                                drawInaccuracyCircle(canvas);
                             }
                         }
                     }
@@ -450,6 +458,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                         // Add line on list
                         if (ActivityTabTwo.flag == 1) {
                             if (draw1) {
+                                countSecondsAfterAddFigure = 0;
                                 Log.i("COUNTFIGURE line", countFigure + " " + lines.size() + " " + circles.size());
                                 whatIsFigure.add(1);
                                 circles.add(new float[]{touchX1Circle, touchY1Circle, radiusCircle});
@@ -460,6 +469,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                         }
                         // Add circle on list
                         else if (ActivityTabTwo.flag == 0 && draw) {
+                            countSecondsAfterAddFigure = 0;
                             Log.i("COUNTFIGURE circle", countFigure + " " + lines.size() + " " + circles.size());
                             whatIsFigure.add(0);
                             lines.add(new Point[]{new Point(touchX1Line, touchY1Line), new Point(touchX2Line, touchY2Line)});
@@ -477,6 +487,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
 
                 try {
                     Thread.sleep(1000);
+                    countSecondsAfterAddFigure++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
