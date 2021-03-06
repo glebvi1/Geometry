@@ -6,7 +6,7 @@ public class Inaccuracy {
 
     private static final float EPS = 45;
 
-    public static Point coincidence_of_point(Point pastPoint, Point currentPoint) {
+    public static Point coincidenceLineWithLine(Point pastPoint, Point currentPoint) {
         float difPointX, difPointY;
 
         difPointX = Math.abs(pastPoint.getX() - currentPoint.getX());
@@ -17,7 +17,7 @@ public class Inaccuracy {
         return null;
     }
 
-    public static Pair<Point, Integer> coincidence_of_point2(Point A, Point B, Point circle, float radius) {
+    public static Pair<Point, Integer> coincidenceLineWithCircle(Point A, Point B, Point circle, float radius) {
 
         Pair<Point, Point> pair = Intersection.intersectionLineWithCircle(A, B, circle, radius);
         if (pair != null) {

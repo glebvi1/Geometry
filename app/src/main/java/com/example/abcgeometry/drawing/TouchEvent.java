@@ -22,9 +22,11 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
 
     DrawThread thread;
     private final String ISTOUCH = "Was touch";
+    private static float EPS = 45f;
 
     // Struct of figure
-    public static ArrayList<float[]> lines = new ArrayList<>(), circles = new ArrayList<>();
+    public static ArrayList<Point[]> lines = new ArrayList<Point[]>();
+    public static ArrayList<float[]> circles = new ArrayList<>();
     public static ArrayList<Float> lengthLine = new ArrayList<>();
     public static ArrayList<Point> points = new ArrayList<>();
     public static ArrayList<Integer> whatIsFigure = new ArrayList<>();
@@ -150,10 +152,10 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
         private volatile boolean running = true;
         Paint paintCircle = new Paint();
         Paint paintLine = new Paint();
-        Paint pointPaint = new Paint();
+        Paint paintPaint = new Paint();
         Paint paintCenterOfCircle = new Paint();
         Paint paintConstantFigure = new Paint();
-        Paint circlePaint = new Paint();
+        Paint paintInaccuracyCircle = new Paint();
 
         public DrawThread(Context context, SurfaceHolder surfaceHolder) {
             this.surfaceHolder = surfaceHolder;
@@ -163,25 +165,112 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
             running = false;
         }
 
+        // The set of param such as color, style and width
         private void setParam(Canvas canvas) {
+            // Color of canvas
             canvas.drawColor(Color.BLACK);
-            paintCircle.setColor(getResources().getColor(R.color.circle)); // lines drawing
-            paintCircle.setStyle(Paint.Style.STROKE);
-            paintCircle.setStrokeWidth(5);
 
+            // Color of lines
             paintLine.setColor(getResources().getColor(R.color.lines)); // lines drawing
             paintLine.setStyle(Paint.Style.STROKE);
             paintLine.setStrokeWidth(5);
 
-            pointPaint.setStyle(Paint.Style.STROKE);
+            // Color of circles
+            paintCircle.setColor(getResources().getColor(R.color.circle)); // lines drawing
+            paintCircle.setStyle(Paint.Style.STROKE);
+            paintCircle.setStrokeWidth(5);
+
+            // Color of circles's center
+            paintCenterOfCircle.setColor(Color.YELLOW);
+            paintCenterOfCircle.setStrokeWidth(15);
+
+            // Color of intersection point
+            paintPaint.setColor(getResources().getColor(R.color.points));
+            paintPaint.setStrokeWidth(10);
+            paintPaint.setStyle(Paint.Style.STROKE);
+
+            // Color of constants figure
             paintConstantFigure.setStrokeWidth(8);
             paintConstantFigure.setColor(Color.GREEN);
 
-            circlePaint.setStyle(Paint.Style.FILL);
-            circlePaint.setColor(Color.RED);
+            // Color of inaccuracy
+            paintInaccuracyCircle.setStyle(Paint.Style.FILL);
+            paintInaccuracyCircle.setColor(Color.RED);
+        }
 
-            paintCenterOfCircle.setColor(Color.YELLOW);
-            paintCenterOfCircle.setStrokeWidth(15);
+        // The draw point of intersection if it exist
+        private void drawPointIntersection(Canvas canvas, Pair<Point, Point> pair) {
+            if (pair != null) {
+                if (draw1) {
+                    TouchEvent.points.add(pair.first);
+                } else {
+                    canvas.drawPoint(pair.first.getX(), pair.first.getY(), paintPaint);
+                }
+                if (pair.second != null) {
+                    if (draw1) {
+                        TouchEvent.points.add(pair.second);
+                    } else {
+                        canvas.drawPoint(pair.second.getX(), pair.second.getY(), paintPaint);
+                    }
+                }
+            }
+        }
+
+        // The method check was inaccuracy?
+        // If bool == true, it means that we check point this start coordinates enother line
+        // Else we check this finish coordinates
+        private void checkInaccuracyLineWithLine(Canvas canvas, Point point, boolean bool) {
+            if (bool) {
+                if (point != null && wasInaccuracyLine1
+                        && touchX1Line != point.getX() && touchY1Line != point.getY()) {
+                    touchX1Line = point.getX();
+                    touchY1Line = point.getY();
+                    wasInaccuracyLine1 = false;
+                    canvas.drawCircle(touchX1Line, touchY1Line, 30, paintInaccuracyCircle);
+                }
+            } else {
+                if (point != null && wasInaccuracyLine2
+                        && touchX2Line != point.getX() && touchY2Line != point.getY()) {
+                    touchX2Line = point.getX();
+                    touchY2Line = point.getY();
+                    wasInaccuracyLine2 = false;
+                    canvas.drawCircle(touchX2Line, touchY2Line, 30, paintInaccuracyCircle);
+                }
+            }
+        }
+
+        private void checkInaccuracyLineWithCircle(Point point, boolean bool, int i) {
+            if (bool) {
+                if (point != null && wasInaccuracyCircle) {
+                    wasInaccuracyCircle = false;
+                    touchX1Circle = point.getX();
+                    touchY1Circle = point.getY();
+                }
+            } else {
+                if (point != null) {
+                    touchX2Circle = point.getX();
+                    touchY2Circle = point.getY();
+                    radiusCircle = lengthLine.get(i);
+                }
+            }
+        }
+
+        private void checkIntersectionCircleWithCircle(Point point) {
+            if (draw1) {
+                boolean difX = Math.abs(point.getX() - touchX1Line) <= EPS;
+                boolean difY = Math.abs(point.getY() - touchY1Line) <= EPS;
+                boolean difX2 = Math.abs(point.getX() - touchX2Line) <= EPS;
+                boolean difY2 = Math.abs(point.getY() - touchY1Line) <= EPS;
+                if (difX && difY) {
+                    touchX1Line = point.getX();
+                    touchY1Line = point.getY();
+                    wasInaccuracyLine1 = false;
+                } else if (difX2 && difY2) {
+                    touchX2Line = point.getX();
+                    touchY2Line = point.getY();
+                    wasInaccuracyLine2 = false;
+                }
+            }
         }
 
         @Override
@@ -199,7 +288,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                     Point currentTouch1 = new Point(touchX1Line, touchY1Line);
                     Point currentTouch2 = new Point(touchX2Line, touchY2Line);
 
-                    // Drawing circle
+                    // Drawing circle, when user move finger
                     if (ActivityTabTwo.flag == 1) {
                         canvas.drawCircle(touchX1Circle, touchY1Circle, radiusCircle, paintCircle);
                         canvas.drawPoint(touchX1Circle, touchY1Circle, paintCenterOfCircle);
@@ -215,235 +304,150 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                     }
 
                     // Drawing lines
-                    for (float[] e : lines) {
+                    for (Point[] points : lines) {
+                        // Drawing current line
+                        canvas.drawLine(points[0].getX(), points[0].getY(), points[1].getX(), points[1].getY(), paintLine);
+                        Point pointOfStart = points[0];
+                        Point pointOfFinish = points[1];
+                        Point pointLineWithLine = Intersection.intersectionLineWithLine(pointOfStart, pointOfFinish, currentTouch1, currentTouch2);
 
-                        // points line
-                        canvas.drawLine(e[0], e[1], e[2], e[3], paintLine);
-                        Point pastTouch1 = new Point(e[0], e[1]);
-                        Point pastTouch2 = new Point(e[2], e[3]);
-                        Point pointLineWithLine = Intersection.intersectionLineWithLine(pastTouch1, pastTouch2, currentTouch1, currentTouch2);
-
-                        // ПЕРЕСЕЧЕНИЕ
-                        // точка пересечение прямой с прямой
+                        // The point of intersection line with line
                         if (pointLineWithLine != null) {
-                            points.add(pointLineWithLine);
-                        }
-                        // пересечение прямой с окружностью
-                        Pair<Point, Point> pairP = Intersection.intersectionLineWithCircle(pastTouch1,
-                                pastTouch2, new Point(touchX1Circle, touchY1Circle), radiusCircle);
-                        // проверка пересечения
-                        if (pairP != null) {
-                            if (draw1) {
-                                points.add(pairP.first);
-                            } else {
-                                canvas.drawPoint(pairP.first.getX(), pairP.first.getY(), pointPaint);
-                            }
-                            if (pairP.second != null) {
-                                if (draw1) {
-                                    points.add(pairP.second);
-                                } else {
-                                    canvas.drawPoint(pairP.second.getX(), pairP.second.getY(), pointPaint);
-                                }
-                            }
+                            TouchEvent.points.add(pointLineWithLine);
                         }
 
-                        // ПРИТЯЖЕНИЕ ЛИНИИ
+                        // The points of intersection line with circle
+                        Pair<Point, Point> pairP = Intersection.intersectionLineWithCircle(pointOfStart,
+                                pointOfFinish, new Point(touchX1Circle, touchY1Circle), radiusCircle);
 
-                        // "притяжение" точки (past and current) (работает)
-                        Point point1 = Inaccuracy.coincidence_of_point(pastTouch1, currentTouch1);
-                        Point point2 = Inaccuracy.coincidence_of_point(pastTouch1, currentTouch2);
-                        Point point3 = Inaccuracy.coincidence_of_point(pastTouch2, currentTouch1);
-                        Point point4 = Inaccuracy.coincidence_of_point(pastTouch2, currentTouch2);
-                        // проверка: есть ли "притяжение" прямой с прямой
+                        // Draw with point
+                        drawPointIntersection(canvas, pairP);
 
-                        if (point1 != null && wasInaccuracyLine1
-                                && touchX1Line != point1.getX() && touchY1Line != point1.getY()) {
-                            touchX1Line = point1.getX();
-                            touchY1Line = point1.getY();
-                            wasInaccuracyLine1 = false;
-                            canvas.drawCircle(touchX1Line, touchY1Line, 30, circlePaint);
-                        } else if (point3 != null && wasInaccuracyLine1
-                                && touchX1Line != point3.getX() && touchY1Line != point3.getY()) {
-                            touchX1Line = point3.getX();
-                            touchY1Line = point3.getY();
-                            wasInaccuracyLine1 = false;
-                            canvas.drawCircle(touchX1Line, touchY1Line, 30, circlePaint);
-                        }
-                        if (point2 != null && wasInaccuracyLine2
-                                && touchX2Line != point2.getX() && touchY2Line != point2.getY()) {
-                            touchX2Line = point2.getX();
-                            touchY2Line = point2.getY();
-                            wasInaccuracyLine2 = false;
-                            canvas.drawCircle(touchX2Line, touchY2Line, 30, circlePaint);
-                        } else if (point4 != null && wasInaccuracyLine2
-                                && touchX2Line != point4.getX() && touchY2Line != point4.getY()) {
-                            touchX2Line = point4.getX();
-                            touchY2Line = point4.getY();
-                            wasInaccuracyLine2 = false;
-                            canvas.drawCircle(touchX2Line, touchY2Line, 30, circlePaint);
-                        }
+                        // Inaccuracies line with line
+                        Point point1 = Inaccuracy.coincidenceLineWithLine(pointOfStart, currentTouch1);
+                        Point point2 = Inaccuracy.coincidenceLineWithLine(pointOfStart, currentTouch2);
+                        Point point3 = Inaccuracy.coincidenceLineWithLine(pointOfFinish, currentTouch1);
+                        Point point4 = Inaccuracy.coincidenceLineWithLine(pointOfFinish, currentTouch2);
 
-                        // ПРИТЯЖЕНИЕ ОКРУЖНОСТИ
+                        checkInaccuracyLineWithLine(canvas, point1, true);
+                        checkInaccuracyLineWithLine(canvas, point3, true);
+                        checkInaccuracyLineWithLine(canvas, point2, false);
+                        checkInaccuracyLineWithLine(canvas, point4, false);
 
-                        // "прияжение" центра окружности к линии
-                        Point centerAndLine = Inaccuracy.coincidence_of_point(pastTouch1, new Point(touchX1Circle, touchY1Circle));
-                        Point centerAndLine2 = Inaccuracy.coincidence_of_point(pastTouch2, new Point(touchX1Circle, touchY1Circle));
-                        Point centerAndLine3 = Inaccuracy.coincidence_of_point(pastTouch1, new Point(touchX1Circle, touchY1Circle));
-                        Point centerAndLine4 = Inaccuracy.coincidence_of_point(pastTouch2, new Point(touchX1Circle, touchY1Circle));
-                        if (centerAndLine != null && wasInaccuracyCircle) {
-                            wasInaccuracyCircle = false;
-                            touchX1Circle = pastTouch1.getX();
-                            touchY1Circle = pastTouch1.getY();
-                        } else if (centerAndLine2 != null && wasInaccuracyCircle) {
-                            wasInaccuracyCircle = false;
-                            touchY1Circle = pastTouch2.getY();
-                            touchX1Circle = pastTouch2.getX();
-                        }
-                        if (centerAndLine3 != null) {
-                            touchX2Circle = centerAndLine3.getX();
-                            touchY2Circle = centerAndLine3.getY();
-                            radiusCircle = lengthLine.get(i);
-                        } else if (centerAndLine4 != null) {
-                            touchY2Circle = centerAndLine4.getY();
-                            touchX2Circle = centerAndLine4.getX();
-                            radiusCircle = lengthLine.get(i);
-                        }
+                        // Inaccuracies circles
+                        // Inaccuracies center of circle with line
+                        Point centerAndLine = Inaccuracy.coincidenceLineWithLine(pointOfStart, new Point(touchX1Circle, touchY1Circle));
+                        Point centerAndLine2 = Inaccuracy.coincidenceLineWithLine(pointOfFinish, new Point(touchX1Circle, touchY1Circle));
+                        Point centerAndLine3 = Inaccuracy.coincidenceLineWithLine(pointOfStart, new Point(touchX1Circle, touchY1Circle));
+                        Point centerAndLine4 = Inaccuracy.coincidenceLineWithLine(pointOfFinish, new Point(touchX1Circle, touchY1Circle));
 
-                        // "притяжение" окружности к линии
-  /*                      Pair<Point, Point> circleAndLine = Intersection.intersectionLineWithCircle(pastTouch1,
-                                pastTouch2, new Point(touchX1Circle, touchY1Circle), radiusCircle);
-                        if (circleAndLine != null) { // есть пересечение
-                        }*/
+                        checkInaccuracyLineWithCircle(centerAndLine, true, 0);
+                        checkInaccuracyLineWithCircle(centerAndLine2, true, 0);
+                        checkInaccuracyLineWithCircle(centerAndLine3, false, i);
+                        checkInaccuracyLineWithCircle(centerAndLine4, false, i);
+
                         i++;
                     }
 
+                    // Drawing circles
                     for (float[] e : circles) {
-                        // точки окружности
+                        // Drawing circle
                         canvas.drawCircle(e[0], e[1], e[2], paintCircle);
                         canvas.drawPoint(e[0], e[1], paintCenterOfCircle);
 
-                        Point pastTouch = new Point(e[0], e[1]);
-                        Point currentTouch = new Point(touchX1Circle, touchY1Circle);
+                        Point pointPastCenterCircle = new Point(e[0], e[1]);
+                        Point pointCurrentCenterCircle = new Point(touchX1Circle, touchY1Circle);
 
-                        // пересечение окружности с окружностью (past и current)
+                        // Intersection Circle with circle
                         Pair<Point, Point> pair = Intersection.intersectionCircleWithCircle(
-                                pastTouch, e[2], currentTouch, radiusCircle);
-                        // проверка пересечения
-                        if (pair != null) {
-                            if (draw1) {
-                                points.add(pair.first);
-                                boolean difX = Math.abs(pair.first.getX() - touchX1Line) <= 45.0;
-                                boolean difY = Math.abs(pair.first.getY() - touchY1Line) <= 45.0;
-                                boolean difX2 = Math.abs(pair.first.getX() - touchX2Line) <= 45.0;
-                                boolean difY2 = Math.abs(pair.first.getY() - touchY1Line) <= 45.0;
-                                if (difX && difY) {
-                                    touchX1Line = pair.first.getX();
-                                    touchY1Line = pair.first.getY();
-                                    wasInaccuracyLine1 = false;
-                                } else if (difX2 && difY2) {
-                                    touchX2Line = pair.first.getX();
-                                    touchY2Line = pair.first.getY();
-                                    wasInaccuracyLine2 = false;
-                                }
-                            }
+                                pointPastCenterCircle, e[2], pointCurrentCenterCircle, radiusCircle);
+
+                        // The check intersection
+                        if (pair != null && draw1) {
+                            points.add(pair.first);
+                            checkIntersectionCircleWithCircle(pair.first);
+
                             if (!pair.first.equals(pair.second)) {
-                                if (draw1) {
-                                    points.add(pair.second);
-                                    points.add(pair.first);
-                                    boolean difX3 = Math.abs(pair.second.getX() - touchX1Line) <= 45.0;
-                                    boolean difY3 = Math.abs(pair.second.getY() - touchY1Line) <= 45.0;
-                                    boolean difX4 = Math.abs(pair.second.getX() - touchX2Line) <= 45.0;
-                                    boolean difY4 = Math.abs(pair.second.getY() - touchY1Line) <= 45.0;
-                                    if (difX3 && difY3) {
-                                        touchX1Line = pair.second.getX();
-                                        touchY1Line = pair.second.getY();
-                                        wasInaccuracyLine1 = false;
-                                    } else if (difX4 && difY4) {
-                                        touchX2Line = pair.second.getX();
-                                        touchY2Line = pair.second.getY();
-                                        wasInaccuracyLine2 = false;
-                                    }
-                                }
+                                points.add(pair.second);
+                                points.add(pair.first);
+                                checkIntersectionCircleWithCircle(pair.second);
                             }
                         }
 
-                        // пересечение окружности с прямой
+                        // The intersection line with circle
                         Pair<Point, Point> pairC = Intersection.intersectionLineWithCircle(
                                 new Point(touchX1Line, touchY1Line), new Point(touchX2Line, touchY2Line),
-                                pastTouch, e[2]);
-                        // проверка пересечения
+                                pointPastCenterCircle, e[2]);
+
+                        // The check intersection
                         if (pairC != null) {
                             if (draw1) {
                                 points.add(pairC.first);
                             } else {
-                                canvas.drawPoint(pairC.first.getX(), pairC.first.getY(), pointPaint);
+                                canvas.drawPoint(pairC.first.getX(), pairC.first.getY(), paintPaint);
                             }
                             if (pairC.second != null) {
                                 if (draw1) {
                                     points.add(pairC.second);
                                 } else {
-                                    canvas.drawPoint(pairC.second.getX(), pairC.second.getY(), pointPaint);
+                                    canvas.drawPoint(pairC.second.getX(), pairC.second.getY(), paintPaint);
                                 }
                             }
                         }
 
-                        // ПРИТЯЖЕНИЕ ЛИНИИ
-
-                        // "притяжение" прямой с центром окружности (работает)
-                        Point pointC = Inaccuracy.coincidence_of_point(pastTouch,
+                        // Inaccuracy line
+                        // Inaccuracy line with center of circle
+                        Point pointC = Inaccuracy.coincidenceLineWithLine(pointPastCenterCircle,
                                 currentTouch1);
-                        Point pointC2 = Inaccuracy.coincidence_of_point(pastTouch,
+                        Point pointC2 = Inaccuracy.coincidenceLineWithLine(pointPastCenterCircle,
                                 currentTouch2);
-                        // проверка "притяжения"
+
+                        // Check inaccuracy
                         if (pointC != null && wasInaccuracyLine1) {
                             touchX1Line = e[0];
                             touchY1Line = e[1];
                             wasInaccuracyLine1 = false;
-                            canvas.drawCircle(touchX1Line, touchY1Line, 30, circlePaint);
+                            canvas.drawCircle(touchX1Line, touchY1Line, 30, paintInaccuracyCircle);
                         }
                         if (pointC2 != null && wasInaccuracyLine2) {
                             touchX2Line = e[0];
                             touchY2Line = e[1];
                             wasInaccuracyLine2 = false;
-                            canvas.drawCircle(touchX2Line, touchY2Line, 30, circlePaint);
+                            canvas.drawCircle(touchX2Line, touchY2Line, 30, paintInaccuracyCircle);
                         }
 
-                        // "притяжение" прямой к окружности
-                        Pair<Point, Integer> coincidence = Inaccuracy.coincidence_of_point2(currentTouch1, currentTouch2,
-                                pastTouch, e[2]);
-                        // проверка "притяжения"
+                        // Inaccuracy line with circle
+                        Pair<Point, Integer> coincidence = Inaccuracy.coincidenceLineWithCircle(currentTouch1, currentTouch2,
+                                pointPastCenterCircle, e[2]);
+
+                        // The check inaccuracy
                         if (coincidence != null) {
-                            //Log.d("WasTouchLine", "был");
-/*                            Log.d("InaccuracyLineAndCircle", "Pair:\n" + Point.toString(coincidence.first) + " " + coincidence.second + "\n" +
-                                    "Touch:\n" + touchX1Line + " " + touchY1Line + " " + touchX2Line + " " +touchY2Line + "\n" +
-                                    "Inaccuracy\n" + wasInaccuracyLine1 + " " + wasInaccuracyLine2 + "Circle:\n" +
-                                    Point.toString(pastTouch) + " " + radiusCircle);*/
                             if (coincidence.second == 1 && wasInaccuracyLine1) {
                                 Log.d("WasTouchLine", "1был");
                                 touchX1Line = coincidence.first.getX();
                                 touchY1Line = coincidence.first.getY();
-                                canvas.drawCircle(touchX1Line, touchY1Line, 30, circlePaint);
+                                canvas.drawCircle(touchX1Line, touchY1Line, 30, paintInaccuracyCircle);
                             } else if (coincidence.second == 2 && wasInaccuracyLine2) {
                                 Log.d("WasTouchLine", "2был");
                                 touchX2Line = coincidence.first.getX();
                                 touchY2Line = coincidence.first.getY();
-                                canvas.drawCircle(touchX2Line, touchY2Line, 30, circlePaint);
+                                canvas.drawCircle(touchX2Line, touchY2Line, 30, paintInaccuracyCircle);
                             }
                         }
                     }
 
+                    // Drawing points of intersection
                     for (Point e : points) {
-
-                        pointPaint.setColor(getResources().getColor(R.color.points));
-                        pointPaint.setStrokeWidth(10);
-                        canvas.drawPoint(e.getX(), e.getY(), pointPaint);
+                        canvas.drawPoint(e.getX(), e.getY(), paintPaint);
                     }
 
+                    // The count of figure not more than 10 on canvas
                     if (lines.size() + circles.size() >= 10) {
                         countFigure = true;
                     }
                     else {
                         countFigure = false;
+                        // Add line on list
                         if (ActivityTabTwo.flag == 1) {
                             if (draw1) {
                                 Log.i("COUNTFIGURE line", countFigure + " " + lines.size() + " " + circles.size());
@@ -454,23 +458,16 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                                 canMakeToast = true;
                             }
                         }
+                        // Add circle on list
                         else if (ActivityTabTwo.flag == 0 && draw) {
                             Log.i("COUNTFIGURE circle", countFigure + " " + lines.size() + " " + circles.size());
                             whatIsFigure.add(0);
-                            lines.add(new float[]{touchX1Line, touchY1Line, touchX2Line, touchY2Line});
+                            lines.add(new Point[]{new Point(touchX1Line, touchY1Line), new Point(touchX2Line, touchY2Line)});
                             float temp = (float) Math.sqrt(Math.pow(touchX1Line - touchX2Line, 2) + Math.pow(touchY1Line - touchY2Line, 2));
                             lengthLine.add(temp);
                             canMakeToast = true;
-/*                        Log.d("NewList", lines.size() + "");
-                        Log.d("CoordinatsOfLine", touchX1Line + " " + touchY1Line + " " + touchX2Line + " " + touchY2Line);
-                        String a = "";
-                        for (float e : lengthLine) {
-                            a += e + " ";
-                        }
-                        Log.d("ArrayListlengthLine", a);
-                        a = "";*/
-                            draw = false;
 
+                            draw = false;
                         }
                     }
 

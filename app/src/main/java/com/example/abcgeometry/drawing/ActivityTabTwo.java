@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.abcgeometry.R;
 import com.example.abcgeometry.assigment.Exercise;
+import com.example.abcgeometry.domain.Point;
 
 import java.util.ArrayList;
 
@@ -25,20 +26,8 @@ public class ActivityTabTwo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (Conductor.buttonFlag == 1) {
-
-            TouchEvent.points = null; TouchEvent.points = new ArrayList<>();
-            TouchEvent.whatIsFigure = null; TouchEvent.whatIsFigure = new ArrayList<>();
-            TouchEvent.lengthLine = null; TouchEvent.lengthLine = new ArrayList<>();
-            TouchEvent.circles = null; TouchEvent.circles = new ArrayList<>();
-            TouchEvent.lines = null; TouchEvent.lines = new ArrayList<>();
-            TouchEvent.constantLine = null;TouchEvent.constantLine = new ArrayList<>();
-            TouchEvent.touchX1Circle = -1000;
-            TouchEvent.touchY1Circle = -1000;
-            TouchEvent.touchX2Circle = -1000;
-            TouchEvent.touchY2Circle = -1000;
-            TouchEvent.radiusCircle = -1000;
+            clearAll(true);
             flag = -1;
-
 
             setContentView(R.layout.field_for_redactor);
 
@@ -52,28 +41,14 @@ public class ActivityTabTwo extends AppCompatActivity {
 
             RadioGroup radio = (RadioGroup) findViewById(R.id.radio);
             Button delAll = (Button) findViewById(R.id.delAll);
-            Button cancel = (Button) findViewById(R.id.cancel);
+            final Button cancel = (Button) findViewById(R.id.cancel);
             Button condition = (Button) findViewById(R.id.condition);
             Button checked = (Button) findViewById(R.id.checked);
 
             delAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TouchEvent.lines = null;
-                    TouchEvent.lines = new ArrayList<>();
-                    TouchEvent.circles = null;
-                    TouchEvent.circles = new ArrayList<>();
-                    TouchEvent.lengthLine = null;
-                    TouchEvent.lengthLine = new ArrayList<>();
-                    TouchEvent.whatIsFigure = null;
-                    TouchEvent.whatIsFigure = new ArrayList<>();
-                    TouchEvent.points = null;
-                    TouchEvent.points = new ArrayList<>();
-                    TouchEvent.touchX1Circle = -1000;
-                    TouchEvent.touchY1Circle = -1000;
-                    TouchEvent.touchX2Circle = -1000;
-                    TouchEvent.touchY2Circle = -1000;
-                    TouchEvent.radiusCircle = -1000;
+                    clearAll(false);
                 }
             });
 
@@ -102,23 +77,7 @@ public class ActivityTabTwo extends AppCompatActivity {
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int m = TouchEvent.whatIsFigure.size();
-                    if (m != 0) {
-                        if (TouchEvent.whatIsFigure.get(m - 1) == 0) {
-                            int n = TouchEvent.lines.size();
-                            TouchEvent.lines.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        } else if (TouchEvent.whatIsFigure.get(m - 1) == 1) {
-                            int n = TouchEvent.circles.size();
-                            TouchEvent.touchX1Circle = -1000;
-                            TouchEvent.touchY1Circle = -1000;
-                            TouchEvent.touchX2Circle = -1000;
-                            TouchEvent.touchY2Circle = -1000;
-                            TouchEvent.radiusCircle = -1000;
-                            TouchEvent.circles.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        }
-                    }
+                    cancel();
                 }
             });
 
@@ -139,18 +98,7 @@ public class ActivityTabTwo extends AppCompatActivity {
 
         }
         else if (Conductor.buttonFlag == 2) {
-
-            TouchEvent.points = null; TouchEvent.points = new ArrayList<>();
-            TouchEvent.whatIsFigure = null; TouchEvent.whatIsFigure = new ArrayList<>();
-            TouchEvent.lengthLine = null; TouchEvent.lengthLine = new ArrayList<>();
-            TouchEvent.circles = null; TouchEvent.circles = new ArrayList<>();
-            TouchEvent.lines = null; TouchEvent.lines = new ArrayList<>();
-            TouchEvent.constantLine = null;TouchEvent.constantLine = new ArrayList<>();
-            TouchEvent.touchX1Circle = -1000;
-            TouchEvent.touchY1Circle = -1000;
-            TouchEvent.touchX2Circle = -1000;
-            TouchEvent.touchY2Circle = -1000;
-            TouchEvent.radiusCircle = -1000;
+            clearAll(true);
             flag = -1;
 
             createAlertDialog("Условие к задаче №2", Exercise.setConditional(2), 0);
@@ -163,7 +111,7 @@ public class ActivityTabTwo extends AppCompatActivity {
             setContentView(R.layout.field_for_redactor);
 
             RadioGroup radio = (RadioGroup) findViewById(R.id.radio);
-            Button cancel = (Button) findViewById(R.id.cancel);
+            final Button cancel = (Button) findViewById(R.id.cancel);
             Button condition = (Button) findViewById(R.id.condition);
             Button checked = (Button) findViewById(R.id.checked);
             Button delAll = (Button) findViewById(R.id.delAll);
@@ -171,21 +119,7 @@ public class ActivityTabTwo extends AppCompatActivity {
             delAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TouchEvent.lines = null;
-                    TouchEvent.lines = new ArrayList<>();
-                    TouchEvent.circles = null;
-                    TouchEvent.circles = new ArrayList<>();
-                    TouchEvent.lengthLine = null;
-                    TouchEvent.lengthLine = new ArrayList<>();
-                    TouchEvent.whatIsFigure = null;
-                    TouchEvent.whatIsFigure = new ArrayList<>();
-                    TouchEvent.points = null;
-                    TouchEvent.points = new ArrayList<>();
-                    TouchEvent.touchX1Circle = -1000;
-                    TouchEvent.touchY1Circle = -1000;
-                    TouchEvent.touchX2Circle = -1000;
-                    TouchEvent.touchY2Circle = -1000;
-                    TouchEvent.radiusCircle = -1000;
+                    clearAll(false);
                 }
             });
 
@@ -215,23 +149,7 @@ public class ActivityTabTwo extends AppCompatActivity {
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int m = TouchEvent.whatIsFigure.size();
-                    if (m != 0) {
-                        if (TouchEvent.whatIsFigure.get(m - 1) == 0) {
-                            int n = TouchEvent.lines.size();
-                            TouchEvent.lines.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        } else if (TouchEvent.whatIsFigure.get(m - 1) == 1) {
-                            int n = TouchEvent.circles.size();
-                            TouchEvent.touchX1Circle = -1000;
-                            TouchEvent.touchY1Circle = -1000;
-                            TouchEvent.touchX2Circle = -1000;
-                            TouchEvent.touchY2Circle = -1000;
-                            TouchEvent.radiusCircle = -1000;
-                            TouchEvent.circles.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        }
-                    }
+                    cancel();
                 }
             });
 
@@ -250,24 +168,13 @@ public class ActivityTabTwo extends AppCompatActivity {
             });
         }
         else if (Conductor.buttonFlag == 3) {
-
-            TouchEvent.points = null; TouchEvent.points = new ArrayList<>();
-            TouchEvent.whatIsFigure = null; TouchEvent.whatIsFigure = new ArrayList<>();
-            TouchEvent.lengthLine = null; TouchEvent.lengthLine = new ArrayList<>();
-            TouchEvent.circles = null; TouchEvent.circles = new ArrayList<>();
-            TouchEvent.lines = null; TouchEvent.lines = new ArrayList<>();
-            TouchEvent.constantLine = null;TouchEvent.constantLine = new ArrayList<>();
-            TouchEvent.touchX1Circle = -1000;
-            TouchEvent.touchY1Circle = -1000;
-            TouchEvent.touchX2Circle = -1000;
-            TouchEvent.touchY2Circle = -1000;
-            TouchEvent.radiusCircle = -1000;
+            clearAll(true);
             flag = -1;
 
             createAlertDialog("Условие к задаче №3", Exercise.setConditional(3), 0);
 
             TouchEvent.constantLine.add(new float[]{400, 385, 400, 755});
-            TouchEvent.lines.add(new float[]{400, 385, 400, 755});
+            TouchEvent.lines.add(new Point[]{new Point(400, 385), new Point(400, 755)});
             TouchEvent.lengthLine.add((float)Math.sqrt(Math.pow(385 - 755, 2)));
 
             getSupportFragmentManager().beginTransaction()
@@ -277,7 +184,7 @@ public class ActivityTabTwo extends AppCompatActivity {
             setContentView(R.layout.field_for_redactor);
 
             RadioGroup radio = (RadioGroup) findViewById(R.id.radio);
-            Button cancel = (Button) findViewById(R.id.cancel);
+            final Button cancel = (Button) findViewById(R.id.cancel);
             Button condition = (Button) findViewById(R.id.condition);
             Button checked = (Button) findViewById(R.id.checked);
             Button delAll = (Button) findViewById(R.id.delAll);
@@ -285,22 +192,8 @@ public class ActivityTabTwo extends AppCompatActivity {
             delAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TouchEvent.lines = null;
-                    TouchEvent.lines = new ArrayList<>();
-                    TouchEvent.circles = null;
-                    TouchEvent.circles = new ArrayList<>();
-                    TouchEvent.lengthLine = null;
-                    TouchEvent.lengthLine = new ArrayList<>();
-                    TouchEvent.whatIsFigure = null;
-                    TouchEvent.whatIsFigure = new ArrayList<>();
-                    TouchEvent.points = null;
-                    TouchEvent.points = new ArrayList<>();
-                    TouchEvent.touchX1Circle = -1000;
-                    TouchEvent.touchY1Circle = -1000;
-                    TouchEvent.touchX2Circle = -1000;
-                    TouchEvent.touchY2Circle = -1000;
-                    TouchEvent.radiusCircle = -1000;
-                    TouchEvent.lines.add(new float[]{400, 385, 400, 755});
+                    clearAll(false);
+                    TouchEvent.lines.add(new Point[]{new Point(400, 385), new Point(400, 755)});
                     TouchEvent.lengthLine.add((float)Math.sqrt(Math.pow(385 - 755, 2)));
                 }
             });
@@ -334,23 +227,7 @@ public class ActivityTabTwo extends AppCompatActivity {
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int m = TouchEvent.whatIsFigure.size();
-                    if (m != 0) {
-                        if (TouchEvent.whatIsFigure.get(m - 1) == 0) {
-                            int n = TouchEvent.lines.size();
-                            TouchEvent.lines.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        } else if (TouchEvent.whatIsFigure.get(m - 1) == 1) {
-                            int n = TouchEvent.circles.size();
-                            TouchEvent.touchX1Circle = -1000;
-                            TouchEvent.touchY1Circle = -1000;
-                            TouchEvent.touchX2Circle = -1000;
-                            TouchEvent.touchY2Circle = -1000;
-                            TouchEvent.radiusCircle = -1000;
-                            TouchEvent.circles.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        }
-                    }
+                    cancel();
                 }
             });
 
@@ -370,18 +247,7 @@ public class ActivityTabTwo extends AppCompatActivity {
             });
         }
         else if (Conductor.buttonFlag == 4) {
-
-            TouchEvent.points = null; TouchEvent.points = new ArrayList<>();
-            TouchEvent.whatIsFigure = null; TouchEvent.whatIsFigure = new ArrayList<>();
-            TouchEvent.lengthLine = null; TouchEvent.lengthLine = new ArrayList<>();
-            TouchEvent.circles = null; TouchEvent.circles = new ArrayList<>();
-            TouchEvent.lines = null; TouchEvent.lines = new ArrayList<>();
-            TouchEvent.constantLine = null;TouchEvent.constantLine = new ArrayList<>();
-            TouchEvent.touchX1Circle = -1000;
-            TouchEvent.touchY1Circle = -1000;
-            TouchEvent.touchX2Circle = -1000;
-            TouchEvent.touchY2Circle = -1000;
-            TouchEvent.radiusCircle = -1000;
+            clearAll(true);
             flag = -1;
 
             setContentView(R.layout.field_for_redactor);
@@ -394,28 +260,14 @@ public class ActivityTabTwo extends AppCompatActivity {
 
             RadioGroup radio = (RadioGroup) findViewById(R.id.radio);
             Button delAll = (Button) findViewById(R.id.delAll);
-            Button cancel = (Button) findViewById(R.id.cancel);
+            final Button cancel = (Button) findViewById(R.id.cancel);
             Button condition = (Button) findViewById(R.id.condition);
             Button checked = (Button) findViewById(R.id.checked);
 
             delAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TouchEvent.lines = null;
-                    TouchEvent.lines = new ArrayList<>();
-                    TouchEvent.circles = null;
-                    TouchEvent.circles = new ArrayList<>();
-                    TouchEvent.lengthLine = null;
-                    TouchEvent.lengthLine = new ArrayList<>();
-                    TouchEvent.whatIsFigure = null;
-                    TouchEvent.whatIsFigure = new ArrayList<>();
-                    TouchEvent.points = null;
-                    TouchEvent.points = new ArrayList<>();
-                    TouchEvent.touchX1Circle = -1000;
-                    TouchEvent.touchY1Circle = -1000;
-                    TouchEvent.touchX2Circle = -1000;
-                    TouchEvent.touchY2Circle = -1000;
-                    TouchEvent.radiusCircle = -1000;
+                    clearAll(false);
                 }
             });
 
@@ -444,54 +296,25 @@ public class ActivityTabTwo extends AppCompatActivity {
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int m = TouchEvent.whatIsFigure.size();
-                    if (m != 0) {
-                        if (TouchEvent.whatIsFigure.get(m - 1) == 0) {
-                            int n = TouchEvent.lines.size();
-                            TouchEvent.lines.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        } else if (TouchEvent.whatIsFigure.get(m - 1) == 1) {
-                            int n = TouchEvent.circles.size();
-                            TouchEvent.touchX1Circle = -1000;
-                            TouchEvent.touchY1Circle = -1000;
-                            TouchEvent.touchX2Circle = -1000;
-                            TouchEvent.touchY2Circle = -1000;
-                            TouchEvent.radiusCircle = -1000;
-                            TouchEvent.circles.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        }
-                    }
+                    cancel();
                 }
             });
 
             checked.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (Exercise.setChecked(4)) {
                         createAlertDialog("Вы решили задачу №4", "Ура!", 1);
                         colorFlag4 = true;
                     } else {
                         createAlertDialog("Неправильно", "В следующий раз все получится!", 2);
                     }
-
                 }
             });
 
         }
         else if (Conductor.buttonFlag == 5) {
-
-            TouchEvent.points = null; TouchEvent.points = new ArrayList<>();
-            TouchEvent.whatIsFigure = null; TouchEvent.whatIsFigure = new ArrayList<>();
-            TouchEvent.lengthLine = null; TouchEvent.lengthLine = new ArrayList<>();
-            TouchEvent.circles = null; TouchEvent.circles = new ArrayList<>();
-            TouchEvent.lines = null; TouchEvent.lines = new ArrayList<>();
-            TouchEvent.constantLine = null;TouchEvent.constantLine = new ArrayList<>();
-            TouchEvent.touchX1Circle = -1000;
-            TouchEvent.touchY1Circle = -1000;
-            TouchEvent.touchX2Circle = -1000;
-            TouchEvent.touchY2Circle = -1000;
-            TouchEvent.radiusCircle = -1000;
+            clearAll(true);
             flag = -1;
 
             setContentView(R.layout.field_for_redactor);
@@ -504,28 +327,14 @@ public class ActivityTabTwo extends AppCompatActivity {
 
             RadioGroup radio = (RadioGroup) findViewById(R.id.radio);
             Button delAll = (Button) findViewById(R.id.delAll);
-            Button cancel = (Button) findViewById(R.id.cancel);
+            final Button cancel = (Button) findViewById(R.id.cancel);
             Button condition = (Button) findViewById(R.id.condition);
             Button checked = (Button) findViewById(R.id.checked);
 
             delAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TouchEvent.lines = null;
-                    TouchEvent.lines = new ArrayList<>();
-                    TouchEvent.circles = null;
-                    TouchEvent.circles = new ArrayList<>();
-                    TouchEvent.lengthLine = null;
-                    TouchEvent.lengthLine = new ArrayList<>();
-                    TouchEvent.whatIsFigure = null;
-                    TouchEvent.whatIsFigure = new ArrayList<>();
-                    TouchEvent.points = null;
-                    TouchEvent.points = new ArrayList<>();
-                    TouchEvent.touchX1Circle = -1000;
-                    TouchEvent.touchY1Circle = -1000;
-                    TouchEvent.touchX2Circle = -1000;
-                    TouchEvent.touchY2Circle = -1000;
-                    TouchEvent.radiusCircle = -1000;
+                    clearAll(false);
                 }
             });
 
@@ -554,42 +363,23 @@ public class ActivityTabTwo extends AppCompatActivity {
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int m = TouchEvent.whatIsFigure.size();
-                    if (m != 0) {
-                        if (TouchEvent.whatIsFigure.get(m - 1) == 0) {
-                            int n = TouchEvent.lines.size();
-                            TouchEvent.lines.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        } else if (TouchEvent.whatIsFigure.get(m - 1) == 1) {
-                            int n = TouchEvent.circles.size();
-                            TouchEvent.touchX1Circle = -1000;
-                            TouchEvent.touchY1Circle = -1000;
-                            TouchEvent.touchX2Circle = -1000;
-                            TouchEvent.touchY2Circle = -1000;
-                            TouchEvent.radiusCircle = -1000;
-                            TouchEvent.circles.remove(n - 1);
-                            TouchEvent.whatIsFigure.remove(m - 1);
-                        }
-                    }
+                    cancel();
                 }
             });
 
             checked.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (Exercise.setChecked(5)) {
                         createAlertDialog("Вы решили задачу №5", "Ура!", 1);
                         colorFlag5 = true;
                     } else {
                         createAlertDialog("Неправильно", "В следующий раз все получится!", 2);
                     }
-
                 }
             });
 
         }
-
     }
 
     private void createAlertDialog(String title, String condition, int number) {
@@ -629,5 +419,41 @@ public class ActivityTabTwo extends AppCompatActivity {
         }
 
         builder.show();
+    }
+
+    private void clearAll(Boolean isConst) {
+        TouchEvent.points = new ArrayList<>();
+        TouchEvent.whatIsFigure = new ArrayList<>();
+        TouchEvent.lengthLine = new ArrayList<>();
+        TouchEvent.circles = new ArrayList<>();
+        TouchEvent.lines = new ArrayList<>();
+        if (isConst) {
+            TouchEvent.constantLine = new ArrayList<>();
+        }
+        TouchEvent.touchX1Circle = -1000;
+        TouchEvent.touchY1Circle = -1000;
+        TouchEvent.touchX2Circle = -1000;
+        TouchEvent.touchY2Circle = -1000;
+        TouchEvent.radiusCircle = -1000;
+    }
+
+    private void cancel() {
+        int m = TouchEvent.whatIsFigure.size();
+        if (m != 0) {
+            if (TouchEvent.whatIsFigure.get(m - 1) == 0) {
+                int n = TouchEvent.lines.size();
+                TouchEvent.lines.remove(n - 1);
+                TouchEvent.whatIsFigure.remove(m - 1);
+            } else if (TouchEvent.whatIsFigure.get(m - 1) == 1) {
+                int n = TouchEvent.circles.size();
+                TouchEvent.touchX1Circle = -1000;
+                TouchEvent.touchY1Circle = -1000;
+                TouchEvent.touchX2Circle = -1000;
+                TouchEvent.touchY2Circle = -1000;
+                TouchEvent.radiusCircle = -1000;
+                TouchEvent.circles.remove(n - 1);
+                TouchEvent.whatIsFigure.remove(m - 1);
+            }
+        }
     }
 }
