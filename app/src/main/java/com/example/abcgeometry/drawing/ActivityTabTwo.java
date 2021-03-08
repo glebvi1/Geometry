@@ -437,6 +437,7 @@ public class ActivityTabTwo extends AppCompatActivity {
         TouchEvent.touchX2Circle = -1000;
         TouchEvent.touchY2Circle = -1000;
         TouchEvent.radiusCircle = -1000;
+        TouchEvent.indexOfPrevisionLine = 0;
     }
 
     private void cancel() {
