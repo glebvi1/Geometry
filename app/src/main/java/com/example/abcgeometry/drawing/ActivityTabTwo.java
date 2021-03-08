@@ -3,6 +3,7 @@ package com.example.abcgeometry.drawing;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
@@ -15,6 +16,7 @@ import com.example.abcgeometry.assigment.Exercise;
 import com.example.abcgeometry.domain.Point;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ActivityTabTwo extends AppCompatActivity {
 
@@ -174,7 +176,7 @@ public class ActivityTabTwo extends AppCompatActivity {
             createAlertDialog("Условие к задаче №3", Exercise.setConditional(3), 0);
 
             TouchEvent.constantLine.add(new float[]{400, 385, 400, 755});
-            TouchEvent.lines.add(new Point[]{new Point(400, 385), new Point(400, 755)});
+            TouchEvent.lines.add(new Pair<Point, Point>(new Point(400, 385), new Point(400, 755)));
             TouchEvent.lengthLine.add((float)Math.sqrt(Math.pow(385 - 755, 2)));
 
             getSupportFragmentManager().beginTransaction()
@@ -193,7 +195,7 @@ public class ActivityTabTwo extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     clearAll(false);
-                    TouchEvent.lines.add(new Point[]{new Point(400, 385), new Point(400, 755)});
+                    TouchEvent.lines.add(new Pair<Point, Point>(new Point(400, 385), new Point(400, 755)));
                     TouchEvent.lengthLine.add((float)Math.sqrt(Math.pow(385 - 755, 2)));
                 }
             });
@@ -422,7 +424,7 @@ public class ActivityTabTwo extends AppCompatActivity {
     }
 
     private void clearAll(Boolean isConst) {
-        TouchEvent.points = new ArrayList<>();
+        TouchEvent.points = new HashSet<>();
         TouchEvent.whatIsFigure = new ArrayList<>();
         TouchEvent.lengthLine = new ArrayList<>();
         TouchEvent.circles = new ArrayList<>();
@@ -439,6 +441,7 @@ public class ActivityTabTwo extends AppCompatActivity {
 
     private void cancel() {
         int m = TouchEvent.whatIsFigure.size();
+        TouchEvent.indexOfPrevisionLine--;
         if (m != 0) {
             if (TouchEvent.whatIsFigure.get(m - 1) == 0) {
                 int n = TouchEvent.lines.size();

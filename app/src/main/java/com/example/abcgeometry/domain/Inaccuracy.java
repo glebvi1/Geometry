@@ -38,25 +38,13 @@ public class Inaccuracy {
                 float difPointY12 = Math.abs(pair.second.getY() - B.getY());
 
                 if (difPointX11 <= EPS && difPointY11 <= EPS) {
-                    return new Pair<Point, Integer>(pair.second, 1); // todo: return точка на окружности!!!
+                    return new Pair<Point, Integer>(pair.second, 1);
                 } else if (difPointX12 <= EPS && difPointY12 <= EPS) {
-                    return new Pair<Point, Integer>(pair.second, 2); // todo: return точка на окружности!!!
+                    return new Pair<Point, Integer>(pair.second, 2);
                 }
             }
         }
         return null;
     }
-
-/*    static boolean coincidence_of_point3(Point c1, float r1, Point c2, float r2, Point lastTouch) {
-        float difX = Math.abs(c1.x - lastTouch.x);
-        float difY = Math.abs(c1.y - lastTouch.y);
-        float distX = Math.abs(c1.x - c2.x);
-        float distY = Math.abs(c1.y - c2.y);
-        if (difX <= EPS && difY <= EPS && distX <= EPS && distY <= EPS) {
-            return true;
-        } else {
-            return false;
-        }
-    }*/
 
 }

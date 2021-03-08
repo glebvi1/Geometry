@@ -2,11 +2,12 @@ package com.example.abcgeometry.domain;
 
 import android.util.Pair;
 
+import java.util.List;
+
 public class Intersection {
 
     // O(1)
     public static Point intersectionLineWithLine(Point A, Point B, Point C, Point D) {
-
         float a1 = B.getY() - A.getY();
         float b1 = A.getX() - B.getX();
         float c1 = a1*(A.getX()) + b1*(A.getY());

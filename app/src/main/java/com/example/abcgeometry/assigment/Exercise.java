@@ -40,10 +40,10 @@ public class Exercise {
                         float eps = Math.abs(TouchEvent.lengthLine.get(i) - TouchEvent.lengthLine.get(j));
                         //Log.d("123654321", TouchEvent.lengthLine.get(0) + " " +TouchEvent.lengthLine.get(1) + " " +TouchEvent.lengthLine.get(2) + " " + temp);
                         if (eps <= EPS && TouchEvent.circles.size() != 0 &&
-                        Intersection.intersectionLineWithLine(TouchEvent.lines.get(i)[0],
-                                TouchEvent.lines.get(i)[1],
-                                TouchEvent.lines.get(j)[0],
-                                TouchEvent.lines.get(j)[1]) != null
+                        Intersection.intersectionLineWithLine(TouchEvent.lines.get(i).first,
+                                TouchEvent.lines.get(i).second,
+                                TouchEvent.lines.get(j).first,
+                                TouchEvent.lines.get(j).second) != null
                         && TouchEvent.lines.size() >= 3) {
                             return true;
                         }
