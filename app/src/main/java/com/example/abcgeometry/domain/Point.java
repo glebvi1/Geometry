@@ -1,6 +1,5 @@
 package com.example.abcgeometry.domain;
 
-import android.util.Log;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
@@ -40,23 +39,23 @@ public class Point {
     }
 
     public boolean equals(@Nullable Point p) {
-        return this.getX() == p.getX() && this.getY() == p.getY();
+        return x == p.getX() && y == p.getY();
     }
 
     public boolean isPointBelongsToFigure(List<Pair<Point, Point>> lines, List<float[]> circles) {
+        int count = 0;
         for (Pair<Point, Point> line : lines) {
             if (isPointBelongsToLine(line)) {
-                return true;
+                count++;
             }
         }
 
         for (float[] circle : circles) {
             if (isPointBelongsToCircle(circle)) {
-                return true;
+                count++;
             }
         }
-
-        return false;
+        return count >= 2;
     }
 
     private boolean isPointBelongsToLine(Pair<Point, Point> line) {

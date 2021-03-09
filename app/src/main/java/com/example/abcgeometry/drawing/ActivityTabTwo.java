@@ -16,6 +16,7 @@ import com.example.abcgeometry.assigment.Exercise;
 import com.example.abcgeometry.domain.Point;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class ActivityTabTwo extends AppCompatActivity {
@@ -424,7 +425,8 @@ public class ActivityTabTwo extends AppCompatActivity {
     }
 
     private void clearAll(Boolean isConst) {
-        TouchEvent.points = new HashSet<>();
+        TouchEvent.pointsLine = new HashSet<>();
+        TouchEvent.pointsCircle = new HashSet<>();
         TouchEvent.whatIsFigure = new ArrayList<>();
         TouchEvent.lengthLine = new ArrayList<>();
         TouchEvent.circles = new ArrayList<>();
@@ -442,12 +444,12 @@ public class ActivityTabTwo extends AppCompatActivity {
 
     private void cancel() {
         int m = TouchEvent.whatIsFigure.size();
-        TouchEvent.indexOfPrevisionLine--;
         if (m != 0) {
             if (TouchEvent.whatIsFigure.get(m - 1) == 0) {
                 int n = TouchEvent.lines.size();
                 TouchEvent.lines.remove(n - 1);
                 TouchEvent.whatIsFigure.remove(m - 1);
+                TouchEvent.indexOfPrevisionLine--;
             } else if (TouchEvent.whatIsFigure.get(m - 1) == 1) {
                 int n = TouchEvent.circles.size();
                 TouchEvent.touchX1Circle = -1000;
@@ -459,5 +461,6 @@ public class ActivityTabTwo extends AppCompatActivity {
                 TouchEvent.whatIsFigure.remove(m - 1);
             }
         }
+        TouchEvent.isNewPoint = true;
     }
 }
