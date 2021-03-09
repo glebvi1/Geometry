@@ -413,7 +413,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                                 currentTouch1);
                         Point pointC2 = null;
                         pointC2 = Inaccuracy.coincidenceLineWithLine(pointPastCenterCircle,
-                                    currentTouch2);
+                                currentTouch2);
 
                         // Check inaccuracy
                         if (pointC != null && wasInaccuracyLine1) {
