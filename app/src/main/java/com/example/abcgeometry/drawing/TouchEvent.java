@@ -17,11 +17,8 @@ import com.example.abcgeometry.domain.Intersection;
 import com.example.abcgeometry.domain.Point;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
@@ -46,7 +43,8 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
     private boolean wasInaccuracyLine2 = true; // The second point
     private boolean wasInaccuracyCircle = true;
     public static int indexOfPrevisionLine = 0;
-    public static boolean isNewPoint = false;
+    public static boolean isNewPointLine = false;
+    public static boolean isNewPointCircle = false;
 
     private int countTouchLine = 1;
     private boolean isTouchLine = false;
@@ -289,7 +287,7 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        private void newPoint(List<Pair<Point, Point>> lines) {
+        private void newPointForLines(List<Pair<Point, Point>> lines) {
             pointsLine = new HashSet<>();
             for (int i = 0; i < lines.size(); i++) {
                 for (int j = i+1; j < lines.size(); j++) {
@@ -300,21 +298,57 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }
             }
+
+        }
+
+        private void newPointForCircle(List<float[]> circles) {
+            pointsCircle = new HashSet<>();
+            for (int i = 0; i < circles.size(); i++) {
+                for (int j = i+1; j < circles.size(); j++) {
+                    Pair<Point, Point> intersection = Intersection.intersectionCircleWithCircle(new Point(circles.get(i)[0],
+                            circles.get(i)[1]), circles.get(i)[2], new Point(circles.get(j)[0],
+                            circles.get(j)[1]), circles.get(j)[2]);
+                    if (intersection.first != null) {
+                        pointsCircle.add(intersection.first);
+                        if (intersection.second != null) {
+                            pointsCircle.add(intersection.second);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void newPointForCircleLine(List<Pair<Point, Point>> lines, List<float[]> circles){
+            for (int i = 0; i < lines.size(); i++) {
+                for (int j = 0; j < circles.size(); j++) {
+                    Pair<Point, Point> intersection = Intersection.intersectionLineWithCircle(lines.get(i).first,
+                            lines.get(i).second, new Point(circles.get(j)[0], circles.get(j)[1]), circles.get(j)[2]);
+                    if (intersection.first != null) {
+                        pointsCircle.add(intersection.first);
+                        if (intersection.second != null) {
+                            pointsCircle.add(intersection.second);
+                        }
+                    }
+                }
+            }
         }
 
         @Override
         public void run() {
-            Log.d("PATH CLASS DRAW", "RUN");
             while (running) {
-                Log.d("PATH CLASS DRAW", "while(running)");
-
                 Canvas canvas = surfaceHolder.lockCanvas();
                 if (canvas != null) {
                     setParam(canvas);
 
-                    if (isNewPoint) {
-                        newPoint(lines);
-                        isNewPoint = false;
+                    if (isNewPointLine) {
+                        newPointForLines(lines);
+                        newPointForCircleLine(lines, circles);
+                        isNewPointLine = false;
+                    }
+                    if (isNewPointCircle) {
+                        newPointForCircle(circles);
+                        newPointForCircleLine(lines, circles);
+                        isNewPointCircle = false;
                     }
 
                     // The current points
@@ -509,15 +543,15 @@ public class TouchEvent extends SurfaceView implements SurfaceHolder.Callback {
 
                     // Drawing points of intersection line
                     for (Point p : pointsLine) {
-                        if (p.isPointBelongsToFigure(lines, circles)) {
+                        //if (p.isPointBelongsToFigure(lines, circles)) {
                             canvas.drawPoint(p.getX(), p.getY(), paintPaint);
-                        }
+                        //}
                     }
                     // Drawing points of intersection circle
                     for (Point p : pointsCircle) {
-                        if (p.isPointBelongsToFigure(lines, circles)) {
+                        //if (p.isPointBelongsToFigure(lines, circles)) {
                             canvas.drawPoint(p.getX(), p.getY(), paintPaint);
-                        }
+                        //}
                     }
 
                     getHolder().unlockCanvasAndPost(canvas);
